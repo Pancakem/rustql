@@ -5,7 +5,7 @@ use std::io::stdin;
 use std::io::stdout;
 use std::io::Write;
 
-// mod lexer;
+mod lexer;
 
 fn main() {
     let stdin = io::stdin();
@@ -19,7 +19,7 @@ fn main() {
         let tks = lexer::lex(line);
 
         for t in  tks {
-            println!("{}", t);
+            println!("{:#?}", t);
         }
     }
 
