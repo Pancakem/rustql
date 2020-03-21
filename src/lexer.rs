@@ -49,10 +49,31 @@ pub fn lex(source: String) -> Vec<Token> {
             ln = ln + 1;
             col = 0;
             continue;
-        } else if c == ';' || c == ',' || c == '(' || c == ')' {
+        } else if c == ';' || c == ',' || c == '(' || c == ')' || c == '\'' || c == '=' {
+            tokens.push(tok.clone());
+            tok = Token {
+                value: "".to_string(),
+                kind: TokenKind::String,
+                location: Location {
+                    line: 0u8,
+                    col: 0u8,
+                },
+            };
             col = col + 1;
             tok.value.push(c);
             tok.location.col = col;
+        } else if c == ' ' {
+            col += 1;
+            tokens.push(tok.clone());
+            tok = Token {
+                value: "".to_string(),
+                kind: TokenKind::String,
+                location: Location {
+                    line: 0u8,
+                    col: 0u8,
+                },
+            };
+            continue;
         } else {
             col = col + 1;
             tok.value.push(c);
@@ -62,8 +83,9 @@ pub fn lex(source: String) -> Vec<Token> {
 
         finalize(&mut tok);
 
-        tokens.push(tok.clone());
+        // tokens.push(tok.clone());
     }
+    tokens.push(tok.clone());
 
     return tokens;
 }
@@ -74,6 +96,10 @@ fn finalize(t: &mut Token) -> bool {
     } else if finalize_keyword(t) {
         return true;
     } else if finalize_numeric(t) {
+        return true;
+    } else if finalize_string(t) {
+        return true;
+    } else if finalize_identifier(t) {
         return true;
     }
     false
@@ -189,7 +215,7 @@ fn finalize_keyword(t: &mut Token) -> bool {
 
     match s_slice {
         "select" | "from" | "as" | "table" | "create" | "insert" | "into" | "values" | "int"
-        | "text" => {
+        | "text" | "where" => {
             t.kind = TokenKind::Keyword;
             true
         }
