@@ -1,5 +1,5 @@
 [package]
-name = "Database"
+name = "rustql"
 version = "0.1.0"
 authors = ["Pancakem <pancakesdeath@protonmail.com>"]
 edition = "2018"
